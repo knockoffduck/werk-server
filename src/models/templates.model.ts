@@ -1,9 +1,9 @@
 import { z } from "zod";
 
 export interface WorkoutTemplateWithExercises {
-  workoutTemplateId: number;
+  id: string;
   workoutName: string;
-  exercises: { exerciseId: number; exerciseName: string }[];
+  exercises: { id: string; exerciseName: string }[];
 }
 
 export const templateExerciseSchema = z.object({

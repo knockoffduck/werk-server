@@ -6,31 +6,31 @@ import { WorkoutTemplateWithExercises } from "../models/templates.model";
 export const getWorkoutTemplates = async () => {
   const workoutTemplatesWithExercises = await db
     .select({
-      workoutTemplateId: workoutTemplate.templateId,
+      id: workoutTemplate.id,
       templateName: workoutTemplate.name,
-      exerciseId: exercise.exerciseId,
+      exerciseId: exercise.id,
       exerciseName: exercise.name,
     })
     .from(workoutTemplate)
     .leftJoin(
       templateExercise,
-      eq(workoutTemplate.templateId, templateExercise.templateId),
+      eq(workoutTemplate.id, templateExercise.templateId),
     )
-    .leftJoin(exercise, eq(templateExercise.exerciseId, exercise.exerciseId));
+    .leftJoin(exercise, eq(templateExercise.exerciseId, exercise.id));
 
-  const groupedResults: Record<number, WorkoutTemplateWithExercises> = {};
+  const groupedResults: Record<string, WorkoutTemplateWithExercises> = {};
 
   workoutTemplatesWithExercises.forEach((row) => {
-    if (!groupedResults[row.workoutTemplateId]) {
-      groupedResults[row.workoutTemplateId] = {
-        workoutTemplateId: row.workoutTemplateId,
+    if (!groupedResults[row.id]) {
+      groupedResults[row.id] = {
+        id: row.id,
         workoutName: row.templateName,
         exercises: [],
       };
     }
     if (row.exerciseId && row.exerciseName) {
-      groupedResults[row.workoutTemplateId].exercises.push({
-        exerciseId: row.exerciseId,
+      groupedResults[row.id].exercises.push({
+        id: row.exerciseId,
         exerciseName: row.exerciseName,
       });
     }
