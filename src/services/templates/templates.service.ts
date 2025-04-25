@@ -3,25 +3,25 @@ import { db } from "../../db";
 import { exercise, templateExercise, workoutTemplate } from "../../db/schema";
 
 interface WorkoutTemplateWithExercises {
-  workoutTemplateId: number;
+  workoutTemplateId: string;
   workoutName: string;
-  exercises: { exerciseId: number; exerciseName: string }[];
+  exercises: { exerciseId: string; exerciseName: string }[];
 }
 
 export const getWorkoutTemplates = async () => {
   const workoutTemplatesWithExercises = await db
     .select({
-      workoutTemplateId: workoutTemplate.templateId,
+      workoutTemplateId: workoutTemplate.id,
       templateName: workoutTemplate.name,
-      exerciseId: exercise.exerciseId,
+      exerciseId: exercise.id,
       exerciseName: exercise.name,
     })
     .from(workoutTemplate)
     .leftJoin(
       templateExercise,
-      eq(workoutTemplate.templateId, templateExercise.templateId),
+      eq(workoutTemplate.id, templateExercise.templateId),
     )
-    .leftJoin(exercise, eq(templateExercise.exerciseId, exercise.exerciseId));
+    .leftJoin(exercise, eq(templateExercise.exerciseId, exercise.id));
 
   const groupedResults: Record<number, WorkoutTemplateWithExercises> = {};
 
